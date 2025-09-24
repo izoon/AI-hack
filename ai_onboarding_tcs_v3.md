@@ -2082,4 +2082,65 @@ flowchart TD
     PARALLEL_TASKS --> COMPLIANCE_TASKS[Compliance<br/>Tasks]
     PARALLEL_TASKS --> FINANCE_TASKS[Finance<br/>Approval Tasks]
     
-    subgraph "Integration Manager Agent"
+    SECURITY_TASKS --> CREATE_SNOW_SEC[Create ServiceNow<br/>Security Ticket]
+    INFRA_TASKS --> CREATE_JIRA_INFRA[Create Jira<br/>Infrastructure Epic]
+    COMPLIANCE_TASKS --> CREATE_COMPLIANCE[Create Compliance<br/>Checklist]
+    FINANCE_TASKS --> CREATE_FINANCE[Create Finance<br/>Approval Request]
+    
+    CREATE_SNOW_SEC --> TRACK_SEC[Track Security<br/>Progress]
+    CREATE_JIRA_INFRA --> TRACK_INFRA[Track Infrastructure<br/>Progress]
+    CREATE_COMPLIANCE --> TRACK_COMP[Track Compliance<br/>Progress]
+    CREATE_FINANCE --> TRACK_FIN[Track Finance<br/>Progress]
+    
+    TRACK_SEC --> CONVERGENCE{All Tasks<br/>Complete?}
+    TRACK_INFRA --> CONVERGENCE
+    TRACK_COMP --> CONVERGENCE
+    TRACK_FIN --> CONVERGENCE
+    
+    CONVERGENCE -->|No| MONITOR[Monitor Progress<br/>Send Updates]
+    MONITOR --> CONVERGENCE
+    
+    CONVERGENCE -->|Yes| DEPLOY_READY[Ready for<br/>Deployment]
+    
+    DEPLOY_READY --> CI_CD[Trigger CI/CD<br/>Pipeline]
+    CI_CD --> DEPLOY_SUCCESS{Deployment<br/>Successful?}
+    
+    DEPLOY_SUCCESS -->|Yes| POST_DEPLOY[Post-Deployment<br/>Validation]
+    DEPLOY_SUCCESS -->|No| DEPLOY_FAIL[Deployment Failed<br/>Rollback]
+    
+    DEPLOY_FAIL --> NOTIFY_FAILURE[Notify Teams<br/>of Failure]
+    NOTIFY_FAILURE --> INVESTIGATE[Investigation<br/>Required]
+    INVESTIGATE --> REMEDIATE[Remediation<br/>Actions]
+    REMEDIATE --> CI_CD
+    
+    POST_DEPLOY --> HEALTH_CHECK[Health Checks<br/>& Monitoring Setup]
+    HEALTH_CHECK --> FINAL_VALIDATION{Final<br/>Validation Pass?}
+    
+    FINAL_VALIDATION -->|Yes| SUCCESS[Onboarding<br/>Complete]
+    FINAL_VALIDATION -->|No| ROLLBACK[Rollback<br/>Required]
+    
+    SUCCESS --> NOTIFY_SUCCESS[Notify Stakeholders<br/>of Success]
+    SUCCESS --> UPDATE_KNOWLEDGE[Update Knowledge<br/>Base]
+    SUCCESS --> CLOSE_TICKETS[Close All<br/>Related Tickets]
+    
+    ROLLBACK --> NOTIFY_ROLLBACK[Notify Teams<br/>of Rollback]
+    ROLLBACK --> INVESTIGATE
+    
+    NOTIFY_SUCCESS --> END_SUCCESS([End - Success])
+    UPDATE_KNOWLEDGE --> END_SUCCESS
+    CLOSE_TICKETS --> END_SUCCESS
+
+    classDef start fill:#2ecc71,color:#fff
+    classDef process fill:#3498db,color:#fff
+    classDef decision fill:#f39c12,color:#fff
+    classDef error fill:#e74c3c,color:#fff
+    classDef success fill:#27ae60,color:#fff
+    classDef end_state fill:#9b59b6,color:#fff
+
+    class START,COLLECT,AI_ANALYZE,DYNAMIC_FORM,USER_INPUT start
+    class VALIDATE,ORCHESTRATE,TEAM_ASSIGN,CREATE_SNOW_SEC,CREATE_JIRA_INFRA,CREATE_COMPLIANCE,CREATE_FINANCE,TRACK_SEC,TRACK_INFRA,TRACK_COMP,TRACK_FIN,DEPLOY_READY,CI_CD,POST_DEPLOY,HEALTH_CHECK process
+    class LOGIN,RISK_ASSESS,REVIEWER,EXEC_APPROVAL,DECISION,PARALLEL_TASKS,CONVERGENCE,DEPLOY_SUCCESS,FINAL_VALIDATION decision
+    class AUTH_ERROR,REJECTED,NOTIFY_REJECT,DEPLOY_FAIL,NOTIFY_FAILURE,INVESTIGATE,REMEDIATE,ROLLBACK,NOTIFY_ROLLBACK error
+    class AUTO_APPROVE,APPROVED,SUCCESS,NOTIFY_SUCCESS,UPDATE_KNOWLEDGE,CLOSE_TICKETS success
+    class END_FAIL,END_REJECT,END_SUCCESS end_state
+```
