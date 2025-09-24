@@ -1372,4 +1372,7 @@ graph TB
     
     %% ROI Components
     FASTER_TTM --> ANNUAL_SAVINGS
-    REDUCED_OVERHEAD --> ANNUAL_SAVINGS# AI-Driven Onboarding Agent - Complete Architecture Diagrams
+    REDUCED_OVERHEAD --> ANNUAL_SAVINGS
+```
+
+# AI-Driven Onboarding Agent - Complete Architecture Diagrams
