@@ -273,13 +273,13 @@ flowchart TD
     classDef decision fill:#ff9800,color:#fff
     classDef process fill:#2196f3,color:#fff
     classDef risk fill:#f44336,color:#fff
-    classDef end fill:#9c27b0,color:#fff
+    classDef endNode fill:#9c27b0,color:#fff
 
     class START start
     class CLASSIFY,GDPR,HIPAA,PCI,SOX,DECISION decision
     class LOW_RISK,MED_RISK,HIGH_RISK,CRIT_RISK,BASIC_CHECK,STD_COMPLIANCE,FULL_COMPLIANCE,ENHANCED_COMPLIANCE process
     class GDPR_CHECK,HIPAA_CHECK,PCI_CHECK,SOX_CHECK,RISK_CALC,MANUAL_REVIEW risk
-    class AUTO_APPROVE,WORKFLOW,NOTIFY end
+    class AUTO_APPROVE,WORKFLOW,NOTIFY endNode
 ```
 
 ## 5. Complete Onboarding Workflow
