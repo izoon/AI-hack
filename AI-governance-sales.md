@@ -2076,7 +2076,61 @@ graph TB
         end
         
         subgraph "Storage Optimization"
-            STORAGE_        SECRETS[External Secrets]
+            STORAGE_TIERING[Storage Tiering<br/>Hot/Cold/Archive<br/>30-70% Savings]
+            COMPRESSION[Data Compression<br/>Deduplication<br/>20-50% Savings]
+            LIFECYCLE[Lifecycle Policies<br/>Automated Archiving<br/>40-80% Savings]
+        end
+        
+        subgraph "Network Optimization"
+            CDN[CDN Usage<br/>Edge Caching<br/>20-40% Savings]
+            COMPRESS[Data Compression<br/>Bandwidth Optimization<br/>15-30% Savings]
+        end
+    end
+    
+    subgraph "Kubernetes Architecture"
+        %% External nodes
+        USERS[Users]
+        ING[Ingress Controller]
+        LB[Load Balancer]
+        MODEL_REGISTRY[Model Registry]
+        SECRETS[External Secrets]
+        
+        %% API Gateway
+        KONG_POD1[Kong Gateway Pod 1]
+        KONG_POD2[Kong Gateway Pod 2]
+        
+        %% Web Services
+        WEB_POD1[Web Service Pod 1]
+        WEB_POD2[Web Service Pod 2]
+        
+        %% AI Agent Services
+        PPA_POD1[Policy Processing Agent Pod 1]
+        PPA_POD2[Policy Processing Agent Pod 2]
+        PPA_POD3[Policy Processing Agent Pod 3]
+        GMA_POD1[Governance Management Agent Pod 1]
+        GMA_POD2[Governance Management Agent Pod 2]
+        RAA_POD1[Risk Assessment Agent Pod 1]
+        RAA_POD2[Risk Assessment Agent Pod 2]
+        CSA_POD1[Compliance Scanning Agent Pod 1]
+        CSA_POD2[Compliance Scanning Agent Pod 2]
+        
+        %% Databases
+        REDIS_DEP[Redis Deployment]
+        PG_SS[PostgreSQL StatefulSet]
+        NEO4J_SS[Neo4j StatefulSet]
+        MONGO_SS[MongoDB StatefulSet]
+        QDRANT_SS[Qdrant StatefulSet]
+        
+        %% Storage
+        PV1[PostgreSQL PV]
+        PV2[Neo4j PV]
+        PV3[MongoDB PV]
+        PV4[Qdrant PV]
+        
+        %% Monitoring
+        PROM_POD[Prometheus Pod]
+        GRAF_POD[Grafana Pod]
+        ELK_POD[ELK Stack Pod]
     end
     
     %% External connections
@@ -2123,11 +2177,13 @@ graph TB
     classDef statefulset fill:#f3e5f5
     classDef storage fill:#fff3e0
     classDef external fill:#e8f5e8
+    classDef cost fill:#fff8e1
     
     class PPA_POD1,PPA_POD2,PPA_POD3,GMA_POD1,GMA_POD2,RAA_POD1,RAA_POD2,CSA_POD1,CSA_POD2,WEB_POD1,WEB_POD2,KONG_POD1,KONG_POD2,PROM_POD,GRAF_POD,ELK_POD pod
     class PG_SS,NEO4J_SS,MONGO_SS,QDRANT_SS,REDIS_DEP statefulset
     class PV1,PV2,PV3,PV4 storage
     class USERS,MODEL_REGISTRY,SECRETS external
+    class RESERVED,SPOT,RIGHT_SIZE,AUTO_SHUTDOWN,STORAGE_TIERING,COMPRESSION,LIFECYCLE,CDN,COMPRESS cost
 ```
 
 ### Kubernetes Deployment Manifests
