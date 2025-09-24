@@ -891,14 +891,14 @@ flowchart TD
     classDef process fill:#3498db,color:#fff
     classDef assignment fill:#9b59b6,color:#fff
     classDef sla fill:#e74c3c,color:#fff
-    classDef end fill:#27ae60,color:#fff
+    classDef final fill:#27ae60,color:#fff
 
     class REQUEST,ANALYZE start
     class APP_TYPE,LOB_ANALYSIS,DATA_CLASS,SECURITY_TEAM,COMPLIANCE_TEAM,INFRA_TEAM,INTEGRATION_TEAM,PRIORITY,COMPLETION_CHECK decision
     class WEB_FLOW,MOBILE_FLOW,API_FLOW,MICRO_FLOW,BATCH_FLOW,COMPLIANCE_CHECK,TEAM_ASSIGNMENT,WORKFLOW_CREATE,SLA_CALC,EXECUTE_WORKFLOW,MONITOR_PROGRESS,IDENTIFY_BLOCKERS,AUTO_ESCALATE,FINAL_VALIDATION process
     class ASSIGN_SECURITY,ASSIGN_COMPLIANCE,ASSIGN_INFRA,ASSIGN_INTEGRATION assignment
     class CRITICAL_SLA,HIGH_SLA,MEDIUM_SLA,LOW_SLA sla
-    class DEPLOY_READY end
+    class DEPLOY_READY final
 ```
 
 ## 11. Database Entity Relationship Diagram
