@@ -1,4 +1,4 @@
-# AI-Driven Onboarding Agent - Complete Architecture Documentation
+# AI-Driven Onboarding Agent - Complete Architecture Documentation (Author: Vahid Salami)
 
 ## Overview
 
