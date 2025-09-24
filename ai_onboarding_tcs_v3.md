@@ -1920,16 +1920,70 @@ The AI-Driven Onboarding Agent represents a transformational approach to applica
 The architecture is designed for scalability, reliability, and continuous improvement, ensuring that the platform will adapt to evolving business needs and regulatory requirements. With a clear implementation roadmap and strong ROI projections, this system provides a compelling foundation for digital transformation in application lifecycle management.
 
 The comprehensive monitoring, security, and compliance frameworks ensure that the system meets the stringent requirements of financial services while providing the agility and efficiency needed to compete in today's fast-paced market environment.
-        SECURITY_TASKS --> CREATE_SNOW_SEC[Create ServiceNow<br/>Security Ticket]
-        INFRA_TASKS --> CREATE_JIRA_INFRA[Create Jira<br/>Infrastructure Epic]
-        COMPLIANCE_TASKS --> CREATE_COMPLIANCE[Create Compliance<br/>Checklist]
-        FINANCE_TASKS --> CREATE_FINANCE[Create Finance<br/>Approval Request]
-        
-        CREATE_SNOW_SEC --> TRACK_SEC[Track Security<br/>Progress]
-        CREATE_JIRA_INFRA --> TRACK_INFRA[Track Infrastructure<br/>Progress]
-        CREATE_COMPLIANCE --> TRACK_COMP[Track Compliance<br/>Progress]
-        CREATE_FINANCE --> TRACK_FIN[Track Finance<br/>Progress]
-    end
+
+```mermaid
+flowchart TD
+    START([User Initiates<br/>Onboarding Request]) --> LOGIN{User<br/>Authentication}
+    
+    LOGIN -->|Success| COLLECT[Collect Initial<br/>Requirements]
+    LOGIN -->|Failed| AUTH_ERROR[Authentication Error]
+    AUTH_ERROR --> END_FAIL([End - Failed])
+    
+    COLLECT --> AI_ANALYZE[AI Analysis<br/>Requirements Gathering Agent]
+    AI_ANALYZE --> DYNAMIC_FORM[Generate Dynamic<br/>Questionnaire]
+    DYNAMIC_FORM --> USER_INPUT[User Completes<br/>Detailed Form]
+    
+    USER_INPUT --> VALIDATE[Validation &<br/>Compliance Agent]
+    VALIDATE --> RISK_ASSESS{Risk Assessment<br/>& Compliance Check}
+    
+    RISK_ASSESS -->|Low Risk<br/>Score < 0.3| AUTO_APPROVE[Automatic<br/>Approval]
+    RISK_ASSESS -->|Medium Risk<br/>0.3 ≤ Score < 0.7| REVIEW_QUEUE[Manual Review<br/>Queue]
+    RISK_ASSESS -->|High Risk<br/>Score ≥ 0.7| ENHANCED_REVIEW[Enhanced Security<br/>Review Required]
+    
+    AUTO_APPROVE --> ORCHESTRATE[Workflow Orchestrator<br/>Agent]
+    
+    REVIEW_QUEUE --> REVIEWER{Reviewer<br/>Available?}
+    REVIEWER -->|Yes| MANUAL_REVIEW[Manual Review<br/>Process]
+    REVIEWER -->|No| QUEUE_WAIT[Wait in Queue<br/>Send Notification]
+    QUEUE_WAIT --> REVIEWER
+    
+    ENHANCED_REVIEW --> SECURITY_TEAM[Security Team<br/>Review]
+    SECURITY_TEAM --> COMPLIANCE_TEAM[Compliance Team<br/>Review]
+    COMPLIANCE_TEAM --> EXEC_APPROVAL{Executive<br/>Approval Required?}
+    
+    EXEC_APPROVAL -->|Yes| EXEC_REVIEW[Executive Review]
+    EXEC_APPROVAL -->|No| APPROVED[Approved]
+    EXEC_REVIEW --> APPROVED
+    
+    MANUAL_REVIEW --> DECISION{Review<br/>Decision}
+    DECISION -->|Approved| APPROVED
+    DECISION -->|Rejected| REJECTED[Application<br/>Rejected]
+    DECISION -->|Needs Changes| FEEDBACK[Send Feedback<br/>to User]
+    
+    REJECTED --> NOTIFY_REJECT[Notify User<br/>of Rejection]
+    NOTIFY_REJECT --> END_REJECT([End - Rejected])
+    
+    FEEDBACK --> USER_INPUT
+    
+    APPROVED --> ORCHESTRATE
+    
+    ORCHESTRATE --> TEAM_ASSIGN[AI-Powered<br/>Team Assignment]
+    TEAM_ASSIGN --> PARALLEL_TASKS{Create Parallel<br/>Task Workflows}
+    
+    PARALLEL_TASKS --> SECURITY_TASKS[Security Team<br/>Tasks]
+    PARALLEL_TASKS --> INFRA_TASKS[Infrastructure<br/>Tasks]
+    PARALLEL_TASKS --> COMPLIANCE_TASKS[Compliance<br/>Tasks]
+    PARALLEL_TASKS --> FINANCE_TASKS[Finance<br/>Approval Tasks]
+    
+    SECURITY_TASKS --> CREATE_SNOW_SEC[Create ServiceNow<br/>Security Ticket]
+    INFRA_TASKS --> CREATE_JIRA_INFRA[Create Jira<br/>Infrastructure Epic]
+    COMPLIANCE_TASKS --> CREATE_COMPLIANCE[Create Compliance<br/>Checklist]
+    FINANCE_TASKS --> CREATE_FINANCE[Create Finance<br/>Approval Request]
+    
+    CREATE_SNOW_SEC --> TRACK_SEC[Track Security<br/>Progress]
+    CREATE_JIRA_INFRA --> TRACK_INFRA[Track Infrastructure<br/>Progress]
+    CREATE_COMPLIANCE --> TRACK_COMP[Track Compliance<br/>Progress]
+    CREATE_FINANCE --> TRACK_FIN[Track Finance<br/>Progress]
     
     TRACK_SEC --> CONVERGENCE{All Tasks<br/>Complete?}
     TRACK_INFRA --> CONVERGENCE
@@ -1974,14 +2028,14 @@ The comprehensive monitoring, security, and compliance frameworks ensure that th
     classDef decision fill:#f39c12,color:#fff
     classDef error fill:#e74c3c,color:#fff
     classDef success fill:#27ae60,color:#fff
-    classDef endNode fill:#9b59b6,color:#fff
+    classDef end_state fill:#9b59b6,color:#fff
 
     class START,COLLECT,AI_ANALYZE,DYNAMIC_FORM,USER_INPUT start
     class VALIDATE,ORCHESTRATE,TEAM_ASSIGN,CREATE_SNOW_SEC,CREATE_JIRA_INFRA,CREATE_COMPLIANCE,CREATE_FINANCE,TRACK_SEC,TRACK_INFRA,TRACK_COMP,TRACK_FIN,DEPLOY_READY,CI_CD,POST_DEPLOY,HEALTH_CHECK process
     class LOGIN,RISK_ASSESS,REVIEWER,EXEC_APPROVAL,DECISION,PARALLEL_TASKS,CONVERGENCE,DEPLOY_SUCCESS,FINAL_VALIDATION decision
     class AUTH_ERROR,REJECTED,NOTIFY_REJECT,DEPLOY_FAIL,NOTIFY_FAILURE,INVESTIGATE,REMEDIATE,ROLLBACK,NOTIFY_ROLLBACK error
     class AUTO_APPROVE,APPROVED,SUCCESS,NOTIFY_SUCCESS,UPDATE_KNOWLEDGE,CLOSE_TICKETS success
-    class END_FAIL,END_REJECT,END_SUCCESS endNode
+    class END_FAIL,END_REJECT,END_SUCCESS end_state
 ```
 
 ### Advanced Workflow Features
