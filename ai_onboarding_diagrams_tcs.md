@@ -406,117 +406,122 @@ flowchart TD
 ## 6. Deployment Architecture
 
 ```mermaid
-graph TB
-    subgraph "Load Balancer"
-        LB[Nginx Load Balancer<br/>:80, :443]
+flowchart TD
+    START([User Initiates<br/>Onboarding Request]) --> LOGIN{User<br/>Authentication}
+    
+    LOGIN -->|Success| COLLECT[Collect Initial<br/>Requirements]
+    LOGIN -->|Failed| AUTH_ERROR[Authentication Error]
+    AUTH_ERROR --> END_FAIL([End - Failed])
+    
+    COLLECT --> AI_ANALYZE[AI Analysis<br/>Requirements Gathering Agent]
+    AI_ANALYZE --> DYNAMIC_FORM[Generate Dynamic<br/>Questionnaire]
+    DYNAMIC_FORM --> USER_INPUT[User Completes<br/>Detailed Form]
+    
+    USER_INPUT --> VALIDATE[Validation &<br/>Compliance Agent]
+    VALIDATE --> RISK_ASSESS{Risk Assessment<br/>& Compliance Check}
+    
+    RISK_ASSESS -->|Low Risk<br/>Score < 0.3| AUTO_APPROVE[Automatic<br/>Approval]
+    RISK_ASSESS -->|Medium Risk<br/>0.3 ≤ Score < 0.7| REVIEW_QUEUE[Manual Review<br/>Queue]
+    RISK_ASSESS -->|High Risk<br/>Score ≥ 0.7| ENHANCED_REVIEW[Enhanced Security<br/>Review Required]
+    
+    AUTO_APPROVE --> ORCHESTRATE[Workflow Orchestrator<br/>Agent]
+    
+    REVIEW_QUEUE --> REVIEWER{Reviewer<br/>Available?}
+    REVIEWER -->|Yes| MANUAL_REVIEW[Manual Review<br/>Process]
+    REVIEWER -->|No| QUEUE_WAIT[Wait in Queue<br/>Send Notification]
+    QUEUE_WAIT --> REVIEWER
+    
+    ENHANCED_REVIEW --> SECURITY_TEAM[Security Team<br/>Review]
+    SECURITY_TEAM --> COMPLIANCE_TEAM[Compliance Team<br/>Review]
+    COMPLIANCE_TEAM --> EXEC_APPROVAL{Executive<br/>Approval Required?}
+    
+    EXEC_APPROVAL -->|Yes| EXEC_REVIEW[Executive Review]
+    EXEC_APPROVAL -->|No| APPROVED[Approved]
+    EXEC_REVIEW --> APPROVED
+    
+    MANUAL_REVIEW --> DECISION{Review<br/>Decision}
+    DECISION -->|Approved| APPROVED
+    DECISION -->|Rejected| REJECTED[Application<br/>Rejected]
+    DECISION -->|Needs Changes| FEEDBACK[Send Feedback<br/>to User]
+    
+    REJECTED --> NOTIFY_REJECT[Notify User<br/>of Rejection]
+    NOTIFY_REJECT --> END_REJECT([End - Rejected])
+    
+    FEEDBACK --> USER_INPUT
+    
+    APPROVED --> ORCHESTRATE
+    
+    ORCHESTRATE --> TEAM_ASSIGN[AI-Powered<br/>Team Assignment]
+    TEAM_ASSIGN --> PARALLEL_TASKS{Create Parallel<br/>Task Workflows}
+    
+    PARALLEL_TASKS --> SECURITY_TASKS[Security Team<br/>Tasks]
+    PARALLEL_TASKS --> INFRA_TASKS[Infrastructure<br/>Tasks]
+    PARALLEL_TASKS --> COMPLIANCE_TASKS[Compliance<br/>Tasks]
+    PARALLEL_TASKS --> FINANCE_TASKS[Finance<br/>Approval Tasks]
+    
+    subgraph "Integration Manager Agent"
+        SECURITY_TASKS --> CREATE_SNOW_SEC[Create ServiceNow<br/>Security Ticket]
+        INFRA_TASKS --> CREATE_JIRA_INFRA[Create Jira<br/>Infrastructure Epic]
+        COMPLIANCE_TASKS --> CREATE_COMPLIANCE[Create Compliance<br/>Checklist]
+        FINANCE_TASKS --> CREATE_FINANCE[Create Finance<br/>Approval Request]
+        
+        CREATE_SNOW_SEC --> TRACK_SEC[Track Security<br/>Progress]
+        CREATE_JIRA_INFRA --> TRACK_INFRA[Track Infrastructure<br/>Progress]
+        CREATE_COMPLIANCE --> TRACK_COMP[Track Compliance<br/>Progress]
+        CREATE_FINANCE --> TRACK_FIN[Track Finance<br/>Progress]
     end
+    
+    TRACK_SEC --> CONVERGENCE{All Tasks<br/>Complete?}
+    TRACK_INFRA --> CONVERGENCE
+    TRACK_COMP --> CONVERGENCE
+    TRACK_FIN --> CONVERGENCE
+    
+    CONVERGENCE -->|No| MONITOR[Monitor Progress<br/>Send Updates]
+    MONITOR --> CONVERGENCE
+    
+    CONVERGENCE -->|Yes| DEPLOY_READY[Ready for<br/>Deployment]
+    
+    DEPLOY_READY --> CI_CD[Trigger CI/CD<br/>Pipeline]
+    CI_CD --> DEPLOY_SUCCESS{Deployment<br/>Successful?}
+    
+    DEPLOY_SUCCESS -->|Yes| POST_DEPLOY[Post-Deployment<br/>Validation]
+    DEPLOY_SUCCESS -->|No| DEPLOY_FAIL[Deployment Failed<br/>Rollback]
+    
+    DEPLOY_FAIL --> NOTIFY_FAILURE[Notify Teams<br/>of Failure]
+    NOTIFY_FAILURE --> INVESTIGATE[Investigation<br/>Required]
+    INVESTIGATE --> REMEDIATE[Remediation<br/>Actions]
+    REMEDIATE --> CI_CD
+    
+    POST_DEPLOY --> HEALTH_CHECK[Health Checks<br/>& Monitoring Setup]
+    HEALTH_CHECK --> FINAL_VALIDATION{Final<br/>Validation Pass?}
+    
+    FINAL_VALIDATION -->|Yes| SUCCESS[Onboarding<br/>Complete]
+    FINAL_VALIDATION -->|No| ROLLBACK[Rollback<br/>Required]
+    
+    SUCCESS --> NOTIFY_SUCCESS[Notify Stakeholders<br/>of Success]
+    SUCCESS --> UPDATE_KNOWLEDGE[Update Knowledge<br/>Base]
+    SUCCESS --> CLOSE_TICKETS[Close All<br/>Related Tickets]
+    
+    ROLLBACK --> NOTIFY_ROLLBACK[Notify Teams<br/>of Rollback]
+    ROLLBACK --> INVESTIGATE
+    
+    NOTIFY_SUCCESS --> END_SUCCESS([End - Success])
+    UPDATE_KNOWLEDGE --> END_SUCCESS
+    CLOSE_TICKETS --> END_SUCCESS
 
-    subgraph "Application Layer - Docker Containers"
-        RGA1[Requirements Agent 1<br/>:8011]
-        RGA2[Requirements Agent 2<br/>:8012]
-        RGA3[Requirements Agent 3<br/>:8013]
-        
-        VCA1[Validation Agent 1<br/>:8021]
-        VCA2[Validation Agent 2<br/>:8022]
-        VCA3[Validation Agent 3<br/>:8023]
-        
-        WOA1[Orchestrator Agent 1<br/>:8031]
-        WOA2[Orchestrator Agent 2<br/>:8032]
-        
-        IMA1[Integration Agent 1<br/>:8041]
-        IMA2[Integration Agent 2<br/>:8042]
-        
-        LLM[LLM Service<br/>:8005]
-        KB[Knowledge Service<br/>:8006]
-    end
+    classDef start fill:#2ecc71,color:#fff
+    classDef process fill:#3498db,color:#fff
+    classDef decision fill:#f39c12,color:#fff
+    classDef error fill:#e74c3c,color:#fff
+    classDef success fill:#27ae60,color:#fff
+    classDef end_state fill:#9b59b6,color:#fff
 
-    subgraph "Data Layer"
-        PG_PRIMARY[(PostgreSQL Primary<br/>:5432)]
-        PG_REPLICA[(PostgreSQL Replica<br/>:5433)]
-        
-        REDIS_CLUSTER[Redis Cluster<br/>:7000-7002]
-        
-        ES_MASTER[(Elasticsearch Master<br/>:9200)]
-        ES_DATA1[(Elasticsearch Data 1<br/>:9201)]
-        ES_DATA2[(Elasticsearch Data 2<br/>:9202)]
-        
-        KAFKA[(Kafka<br/>:9092)]
-        ZOOK[(Zookeeper<br/>:2181)]
-        
-        MINIO[(MinIO<br/>:9000)]
-    end
-
-    subgraph "Monitoring & Management"
-        PROM[Prometheus<br/>:9090]
-        GRAF[Grafana<br/>:3001]
-        OPA[Policy Agent<br/>:8181]
-        TEMPORAL[Temporal<br/>:7233]
-    end
-
-    %% Load Balancer Connections
-    LB --> RGA1
-    LB --> RGA2
-    LB --> RGA3
-    LB --> VCA1
-    LB --> VCA2
-    LB --> VCA3
-    LB --> WOA1
-    LB --> WOA2
-    LB --> IMA1
-    LB --> IMA2
-
-    %% Service Dependencies
-    RGA1 --> PG_PRIMARY
-    RGA1 --> REDIS_CLUSTER
-    RGA1 --> LLM
-    RGA2 --> PG_REPLICA
-    RGA2 --> REDIS_CLUSTER
-    RGA3 --> PG_PRIMARY
-
-    VCA1 --> PG_PRIMARY
-    VCA1 --> ES_MASTER
-    VCA1 --> OPA
-    VCA2 --> PG_REPLICA
-    VCA2 --> ES_DATA1
-
-    WOA1 --> KAFKA
-    WOA1 --> TEMPORAL
-    WOA1 --> KB
-    WOA2 --> KAFKA
-    WOA2 --> TEMPORAL
-
-    IMA1 --> MINIO
-    IMA1 --> KAFKA
-    IMA2 --> MINIO
-    IMA2 --> KAFKA
-
-    %% Database Replication
-    PG_PRIMARY -.->|Replication| PG_REPLICA
-
-    %% Elasticsearch Cluster
-    ES_MASTER --- ES_DATA1
-    ES_MASTER --- ES_DATA2
-
-    %% Monitoring
-    PROM --> RGA1
-    PROM --> VCA1
-    PROM --> WOA1
-    PROM --> IMA1
-    PROM --> PG_PRIMARY
-    GRAF --> PROM
-
-    %% Kafka Dependencies
-    KAFKA --> ZOOK
-
-    classDef lb fill:#ff6b6b,color:#fff
-    classDef app fill:#4ecdc4,color:#fff
-    classDef data fill:#45b7d1,color:#fff
-    classDef monitor fill:#96ceb4,color:#fff
-
-    class LB lb
-    class RGA1,RGA2,RGA3,VCA1,VCA2,VCA3,WOA1,WOA2,IMA1,IMA2,LLM,KB app
-    class PG_PRIMARY,PG_REPLICA,REDIS_CLUSTER,ES_MASTER,ES_DATA1,ES_DATA2,KAFKA,ZOOK,MINIO data
-    class PROM,GRAF,OPA,TEMPORAL monitor
+    class START,COLLECT,AI_ANALYZE,DYNAMIC_FORM,USER_INPUT start
+    class VALIDATE,ORCHESTRATE,TEAM_ASSIGN,CREATE_SNOW_SEC,CREATE_JIRA_INFRA,CREATE_COMPLIANCE,CREATE_FINANCE,TRACK_SEC,TRACK_INFRA,TRACK_COMP,TRACK_FIN,DEPLOY_READY,CI_CD,POST_DEPLOY,HEALTH_CHECK process
+    class LOGIN,RISK_ASSESS,REVIEWER,EXEC_APPROVAL,DECISION,PARALLEL_TASKS,CONVERGENCE,DEPLOY_SUCCESS,FINAL_VALIDATION decision
+    class AUTH_ERROR,REJECTED,NOTIFY_REJECT,DEPLOY_FAIL,NOTIFY_FAILURE,INVESTIGATE,REMEDIATE,ROLLBACK,NOTIFY_ROLLBACK error
+    class AUTO_APPROVE,APPROVED,SUCCESS,NOTIFY_SUCCESS,UPDATE_KNOWLEDGE,CLOSE_TICKETS success
+    class END_FAIL,END_REJECT,END_SUCCESS end_state
 ```
 
 ## 7. High Availability & Disaster Recovery
