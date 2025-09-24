@@ -286,59 +286,121 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    START[Onboarding Request] --> CLASSIFY{Classify Data<br/>& Requirements}
+    START([User Initiates<br/>Onboarding Request]) --> LOGIN{User<br/>Authentication}
     
-    CLASSIFY -->|Public| LOW_RISK[Low Risk Path]
-    CLASSIFY -->|Internal| MED_RISK[Medium Risk Path]
-    CLASSIFY -->|Confidential| HIGH_RISK[High Risk Path]
-    CLASSIFY -->|Restricted| CRIT_RISK[Critical Risk Path]
+    LOGIN -->|Success| COLLECT[Collect Initial<br/>Requirements]
+    LOGIN -->|Failed| AUTH_ERROR[Authentication Error]
+    AUTH_ERROR --> END_FAIL([End - Failed])
     
-    LOW_RISK --> BASIC_CHECK[Basic Security Check]
-    MED_RISK --> STD_COMPLIANCE[Standard Compliance]
-    HIGH_RISK --> FULL_COMPLIANCE[Full Compliance Suite]
-    CRIT_RISK --> ENHANCED_COMPLIANCE[Enhanced Compliance]
+    COLLECT --> AI_ANALYZE[AI Analysis<br/>Requirements Gathering Agent]
+    AI_ANALYZE --> DYNAMIC_FORM[Generate Dynamic<br/>Questionnaire]
+    DYNAMIC_FORM --> USER_INPUT[User Completes<br/>Detailed Form]
     
-    STD_COMPLIANCE --> GDPR{GDPR Required?}
-    FULL_COMPLIANCE --> GDPR
-    ENHANCED_COMPLIANCE --> GDPR
+    USER_INPUT --> VALIDATE[Validation &<br/>Compliance Agent]
+    VALIDATE --> RISK_ASSESS{Risk Assessment<br/>& Compliance Check}
     
-    GDPR -->|Yes| GDPR_CHECK[GDPR Validation]
-    GDPR -->|No| HIPAA{HIPAA Required?}
-    GDPR_CHECK --> HIPAA
+    RISK_ASSESS -->|Low Risk<br/>Score < 0.3| AUTO_APPROVE[Automatic<br/>Approval]
+    RISK_ASSESS -->|Medium Risk<br/>0.3 ≤ Score < 0.7| REVIEW_QUEUE[Manual Review<br/>Queue]
+    RISK_ASSESS -->|High Risk<br/>Score ≥ 0.7| ENHANCED_REVIEW[Enhanced Security<br/>Review Required]
     
-    HIPAA -->|Yes| HIPAA_CHECK[HIPAA Validation]
-    HIPAA -->|No| PCI{PCI-DSS Required?}
-    HIPAA_CHECK --> PCI
+    AUTO_APPROVE --> ORCHESTRATE[Workflow Orchestrator<br/>Agent]
     
-    PCI -->|Yes| PCI_CHECK[PCI-DSS Validation]
-    PCI -->|No| SOX{SOX Required?}
-    PCI_CHECK --> SOX
+    REVIEW_QUEUE --> REVIEWER{Reviewer<br/>Available?}
+    REVIEWER -->|Yes| MANUAL_REVIEW[Manual Review<br/>Process]
+    REVIEWER -->|No| QUEUE_WAIT[Wait in Queue<br/>Send Notification]
+    QUEUE_WAIT --> REVIEWER
     
-    SOX -->|Yes| SOX_CHECK[SOX Validation]
-    SOX -->|No| RISK_CALC[Calculate Risk Score]
-    SOX_CHECK --> RISK_CALC
+    ENHANCED_REVIEW --> SECURITY_TEAM[Security Team<br/>Review]
+    SECURITY_TEAM --> COMPLIANCE_TEAM[Compliance Team<br/>Review]
+    COMPLIANCE_TEAM --> EXEC_APPROVAL{Executive<br/>Approval Required?}
     
-    BASIC_CHECK --> RISK_CALC
+    EXEC_APPROVAL -->|Yes| EXEC_REVIEW[Executive Review]
+    EXEC_APPROVAL -->|No| APPROVED[Approved]
+    EXEC_REVIEW --> APPROVED
     
-    RISK_CALC --> DECISION{Risk Score < 0.3?}
-    DECISION -->|Yes| AUTO_APPROVE[Auto Approval]
-    DECISION -->|No| MANUAL_REVIEW[Manual Review Required]
+    MANUAL_REVIEW --> DECISION{Review<br/>Decision}
+    DECISION -->|Approved| APPROVED
+    DECISION -->|Rejected| REJECTED[Application<br/>Rejected]
+    DECISION -->|Needs Changes| FEEDBACK[Send Feedback<br/>to User]
     
-    AUTO_APPROVE --> WORKFLOW[Start Workflow]
-    MANUAL_REVIEW --> NOTIFY[Notify Reviewers]
-    NOTIFY --> WORKFLOW
+    REJECTED --> NOTIFY_REJECT[Notify User<br/>of Rejection]
+    NOTIFY_REJECT --> END_REJECT([End - Rejected])
+    
+    FEEDBACK --> USER_INPUT
+    
+    APPROVED --> ORCHESTRATE
+    
+    ORCHESTRATE --> TEAM_ASSIGN[AI-Powered<br/>Team Assignment]
+    TEAM_ASSIGN --> PARALLEL_TASKS{Create Parallel<br/>Task Workflows}
+    
+    PARALLEL_TASKS --> SECURITY_TASKS[Security Team<br/>Tasks]
+    PARALLEL_TASKS --> INFRA_TASKS[Infrastructure<br/>Tasks]
+    PARALLEL_TASKS --> COMPLIANCE_TASKS[Compliance<br/>Tasks]
+    PARALLEL_TASKS --> FINANCE_TASKS[Finance<br/>Approval Tasks]
+    
+    subgraph "Integration Manager Agent"
+        SECURITY_TASKS --> CREATE_SNOW_SEC[Create ServiceNow<br/>Security Ticket]
+        INFRA_TASKS --> CREATE_JIRA_INFRA[Create Jira<br/>Infrastructure Epic]
+        COMPLIANCE_TASKS --> CREATE_COMPLIANCE[Create Compliance<br/>Checklist]
+        FINANCE_TASKS --> CREATE_FINANCE[Create Finance<br/>Approval Request]
+        
+        CREATE_SNOW_SEC --> TRACK_SEC[Track Security<br/>Progress]
+        CREATE_JIRA_INFRA --> TRACK_INFRA[Track Infrastructure<br/>Progress]
+        CREATE_COMPLIANCE --> TRACK_COMP[Track Compliance<br/>Progress]
+        CREATE_FINANCE --> TRACK_FIN[Track Finance<br/>Progress]
+    end
+    
+    TRACK_SEC --> CONVERGENCE{All Tasks<br/>Complete?}
+    TRACK_INFRA --> CONVERGENCE
+    TRACK_COMP --> CONVERGENCE
+    TRACK_FIN --> CONVERGENCE
+    
+    CONVERGENCE -->|No| MONITOR[Monitor Progress<br/>Send Updates]
+    MONITOR --> CONVERGENCE
+    
+    CONVERGENCE -->|Yes| DEPLOY_READY[Ready for<br/>Deployment]
+    
+    DEPLOY_READY --> CI_CD[Trigger CI/CD<br/>Pipeline]
+    CI_CD --> DEPLOY_SUCCESS{Deployment<br/>Successful?}
+    
+    DEPLOY_SUCCESS -->|Yes| POST_DEPLOY[Post-Deployment<br/>Validation]
+    DEPLOY_SUCCESS -->|No| DEPLOY_FAIL[Deployment Failed<br/>Rollback]
+    
+    DEPLOY_FAIL --> NOTIFY_FAILURE[Notify Teams<br/>of Failure]
+    NOTIFY_FAILURE --> INVESTIGATE[Investigation<br/>Required]
+    INVESTIGATE --> REMEDIATE[Remediation<br/>Actions]
+    REMEDIATE --> CI_CD
+    
+    POST_DEPLOY --> HEALTH_CHECK[Health Checks<br/>& Monitoring Setup]
+    HEALTH_CHECK --> FINAL_VALIDATION{Final<br/>Validation Pass?}
+    
+    FINAL_VALIDATION -->|Yes| SUCCESS[Onboarding<br/>Complete]
+    FINAL_VALIDATION -->|No| ROLLBACK[Rollback<br/>Required]
+    
+    SUCCESS --> NOTIFY_SUCCESS[Notify Stakeholders<br/>of Success]
+    SUCCESS --> UPDATE_KNOWLEDGE[Update Knowledge<br/>Base]
+    SUCCESS --> CLOSE_TICKETS[Close All<br/>Related Tickets]
+    
+    ROLLBACK --> NOTIFY_ROLLBACK[Notify Teams<br/>of Rollback]
+    ROLLBACK --> INVESTIGATE
+    
+    NOTIFY_SUCCESS --> END_SUCCESS([End - Success])
+    UPDATE_KNOWLEDGE --> END_SUCCESS
+    CLOSE_TICKETS --> END_SUCCESS
 
-    classDef start fill:#4caf50,color:#fff
-    classDef decision fill:#ff9800,color:#fff
-    classDef process fill:#2196f3,color:#fff
-    classDef risk fill:#f44336,color:#fff
-    classDef endNode fill:#9c27b0,color:#fff
+    classDef start fill:#2ecc71,color:#fff
+    classDef process fill:#3498db,color:#fff
+    classDef decision fill:#f39c12,color:#fff
+    classDef error fill:#e74c3c,color:#fff
+    classDef success fill:#27ae60,color:#fff
+    classDef end fill:#9b59b6,color:#fff
 
-    class START start
-    class CLASSIFY,GDPR,HIPAA,PCI,SOX,DECISION decision
-    class LOW_RISK,MED_RISK,HIGH_RISK,CRIT_RISK,BASIC_CHECK,STD_COMPLIANCE,FULL_COMPLIANCE,ENHANCED_COMPLIANCE process
-    class GDPR_CHECK,HIPAA_CHECK,PCI_CHECK,SOX_CHECK,RISK_CALC,MANUAL_REVIEW risk
-    class AUTO_APPROVE,WORKFLOW,NOTIFY endNode
+    class START,COLLECT,AI_ANALYZE,DYNAMIC_FORM,USER_INPUT start
+    class VALIDATE,ORCHESTRATE,TEAM_ASSIGN,CREATE_SNOW_SEC,CREATE_JIRA_INFRA,CREATE_COMPLIANCE,CREATE_FINANCE,TRACK_SEC,TRACK_INFRA,TRACK_COMP,TRACK_FIN,DEPLOY_READY,CI_CD,POST_DEPLOY,HEALTH_CHECK process
+    class LOGIN,RISK_ASSESS,REVIEWER,EXEC_APPROVAL,DECISION,PARALLEL_TASKS,CONVERGENCE,DEPLOY_SUCCESS,FINAL_VALIDATION decision
+    class AUTH_ERROR,REJECTED,NOTIFY_REJECT,DEPLOY_FAIL,NOTIFY_FAILURE,INVESTIGATE,REMEDIATE,ROLLBACK,NOTIFY_ROLLBACK error
+    class AUTO_APPROVE,APPROVED,SUCCESS,NOTIFY_SUCCESS,UPDATE_KNOWLEDGE,CLOSE_TICKETS success
+    class END_FAIL,END_REJECT,END_SUCCESS end
 ```
 
 ## 6. Deployment Architecture
