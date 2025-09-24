@@ -3912,3 +3912,5 @@ graph TB
     subgraph "External Components"
         USERS[External Users]
         MODEL_REGISTRY[ML Model Registry]
+    end
+```
