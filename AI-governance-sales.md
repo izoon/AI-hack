@@ -2875,7 +2875,8 @@ graph TB
     subgraph "Compliance Dashboard"
         DASH_SCORE[Real-time Scoring]
         DASH_ALERT[Compliance Alerts]
-        DASH_TREND[Trend Analysis# AI-Driven Governance Vetting Agent - Complete Enterprise System Design
+        DASH_TREND[Trend Analysis]
+    end
 
 ## Executive Summary
 
