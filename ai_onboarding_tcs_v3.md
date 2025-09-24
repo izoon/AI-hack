@@ -527,16 +527,15 @@ flowchart TD
     PARALLEL_TASKS --> COMPLIANCE_TASKS[Compliance<br/>Tasks]
     PARALLEL_TASKS --> FINANCE_TASKS[Finance<br/>Approval Tasks]
     
-        SECURITY_TASKS --> CREATE_SNOW_SEC[Create ServiceNow<br/>Security Ticket]
-        INFRA_TASKS --> CREATE_JIRA_INFRA[Create Jira<br/>Infrastructure Epic]
-        COMPLIANCE_TASKS --> CREATE_COMPLIANCE[Create Compliance<br/>Checklist]
-        FINANCE_TASKS --> CREATE_FINANCE[Create Finance<br/>Approval Request]
-        
-        CREATE_SNOW_SEC --> TRACK_SEC[Track Security<br/>Progress]
-        CREATE_JIRA_INFRA --> TRACK_INFRA[Track Infrastructure<br/>Progress]
-        CREATE_COMPLIANCE --> TRACK_COMP[Track Compliance<br/>Progress]
-        CREATE_FINANCE --> TRACK_FIN[Track Finance<br/>Progress]
-    end
+    SECURITY_TASKS --> CREATE_SNOW_SEC[Create ServiceNow<br/>Security Ticket]
+    INFRA_TASKS --> CREATE_JIRA_INFRA[Create Jira<br/>Infrastructure Epic]
+    COMPLIANCE_TASKS --> CREATE_COMPLIANCE[Create Compliance<br/>Checklist]
+    FINANCE_TASKS --> CREATE_FINANCE[Create Finance<br/>Approval Request]
+    
+    CREATE_SNOW_SEC --> TRACK_SEC[Track Security<br/>Progress]
+    CREATE_JIRA_INFRA --> TRACK_INFRA[Track Infrastructure<br/>Progress]
+    CREATE_COMPLIANCE --> TRACK_COMP[Track Compliance<br/>Progress]
+    CREATE_FINANCE --> TRACK_FIN[Track Finance<br/>Progress]
     
     TRACK_SEC --> CONVERGENCE{All Tasks<br/>Complete?}
     TRACK_INFRA --> CONVERGENCE
